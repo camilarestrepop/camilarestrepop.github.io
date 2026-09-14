@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m with context %}
+{% block title %}Page not found — {{ site.brand_name }}{% endblock %}
+{% block content %}
+<section class="section section--page not-found">
+  <h1 class="section__title title">{{ m.t('This page flew away', 'Esta página voló') }}</h1>
+  <p class="section__lede">{{ m.t('The link you followed does not exist any more.',
+                                  'El enlace que seguiste ya no existe.') }}</p>
+  {{ m.bee('not-found__bee') }}
+  <p class="section__more">
+    <a class="subtitle" href="{{ url('index.html') }}">{{ m.t('Back to the home page', 'Volver al inicio') }}</a>
+  </p>
+</section>
+{% endblock %}

@@ -1,0 +1,165 @@
+# Adds a piece to the shop from an "Add a product" issue.
+#
+# Cami fills in the form (Issues -> New issue -> Add a product), drags her photos into it, and
+# presses Create. This reads the form, writes website/content/products/<name>/, says what happened
+# on the issue, closes it, and asks the publish workflow to put the new piece online.
+#
+# Nothing tells her a piece is published until it really has been saved to the repository. That is
+# the rule the conditions below are written around: the comment, the closing of the issue and the
+# publish all wait for the push to have worked.
+#
+# (Anade una pieza a la tienda a partir del formulario "Add a product".)
+name: Add a product
+
+on:
+  issues:
+    types: [opened, edited]
+
+# One piece at a time. Two issues a minute apart would otherwise race each other to push, and the
+# one that lost would fail. Never cancel: a cancelled run could stop half way through saving.
+concurrency:
+  group: add-product
+  cancel-in-progress: false
+
+jobs:
+  add:
+    # Only the owner of the repository can add pieces this way. The repository is public, so anyone
+    # can open an issue: this is the guard that stops a stranger writing to it, and it is the one
+    # that matters.
+    #
+    # The form both applies the add-product label and puts "Add product:" at the front of the title.
+    # Either is enough to recognise it, because a brand-new repository has no labels yet and GitHub
+    # does not create the ones an issue form asks for: with the label alone, the very first piece
+    # would go unanswered. The first step below creates the label so it exists from then on.
+    #
+    # An already-closed issue is left alone, so editing it later cannot add the piece twice.
+    if: >-
+      github.event.issue.user.login == github.repository_owner
+      && github.event.issue.state == 'open'
+      && (contains(github.event.issue.labels.*.name, 'add-product')
+      || startsWith(github.event.issue.title, 'Add product:'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      actions: write
+    steps:
+      - name: Make sure the add-product label exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        # --force means "create it, or leave the one that is already there". This runs before the
+        # checkout on purpose: it needs nothing from the repository's files.
+        run: >-
+          gh label create add-product --color F8D919
+          --description "Product added via the form" --force
+
+      - name: Put the label on this issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        # The first issue of a new repository arrives without the label, because it did not exist
+        # when the form was filled in. Adding it now means every piece can be found by its label.
+        run: gh issue edit "$ISSUE_NUMBER" --add-label add-product
+
+      - name: Get the files
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install what the builder needs
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e . --no-deps
+
+      - name: Read the form and write the piece
+        id: intake
+        # The issue text is handed over as an environment variable, never pasted into the command
+        # itself: whatever someone types in an issue must stay text, not become part of a command.
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python -m cinco_tintas.intake
+
+      - name: Save the new piece
+        id: push
+        if: steps.intake.outputs.product-created == 'true'
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          git config user.name "5 Tintas bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add website/content/products
+          if git diff --cached --quiet; then
+            echo "Nothing new to save."
+            exit 0
+          fi
+          git commit -m "Add a piece from issue #${ISSUE_NUMBER}"
+          # Something else may have landed on the branch in the meantime — a file she edited in the
+          # browser, or a piece added a moment earlier. Take that first and put this commit on top,
+          # then push. Three tries, because the same thing can happen again while we are pushing.
+          for attempt in 1 2 3; do
+            git rebase --abort 2>/dev/null || true  # a conflict on the last try must not block this one
+            if git pull --rebase origin "$BRANCH" && git push origin "HEAD:refs/heads/${BRANCH}"; then
+              echo "Saved."
+              exit 0
+            fi
+            echo "Could not save it on try ${attempt} of 3. Trying again in a moment."
+            sleep 5
+          done
+          echo "The piece was written here but could not be saved to the repository."
+          exit 1
+
+      - name: Say what happened on the issue
+        # Two cases post the comment the program wrote: the form was not complete enough to add
+        # anything (so there was nothing to push), or the piece really was pushed. The third case —
+        # written but not pushed — is answered by the next step instead, because that comment says
+        # the piece is on the website and it is not.
+        if: >-
+          always() && hashFiles('intake-comment.md') != ''
+          && (steps.intake.outputs.product-created != 'true' || steps.push.outcome == 'success')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: gh issue comment "$ISSUE_NUMBER" --body-file intake-comment.md
+
+      - name: Say that nothing was saved
+        if: always() && steps.intake.outputs.product-created == 'true' && steps.push.outcome != 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          cat > not-saved-comment.md <<'COMMENT'
+          Something went wrong saving your piece. Nothing was published.
+
+          Your text is safe in this issue — nothing you wrote is lost. Tell Jack.
+
+          ---
+
+          Algo fallo al guardar tu pieza. No se publico nada.
+
+          Tu texto esta a salvo en este formulario: no se ha perdido nada. Avisale a Jack.
+          COMMENT
+          gh issue comment "$ISSUE_NUMBER" --body-file not-saved-comment.md
+
+      - name: Close the issue
+        if: steps.push.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: gh issue close "$ISSUE_NUMBER"
+
+      - name: Publish the website
+        if: steps.push.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # A push made by an Action does not start the publish workflow by itself, so ask it to run.
+        run: gh workflow run deploy.yml

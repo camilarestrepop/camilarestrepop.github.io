@@ -1,0 +1,12 @@
+# The finished website. GitHub builds it fresh every time, so it is not kept here.
+# (La pagina terminada. GitHub la construye cada vez, no se guarda aqui.)
+dist/
+
+# Housekeeping files that Python, macOS and the "add a product" helper leave behind.
+__pycache__/
+*.py[cod]
+*.egg-info/
+.DS_Store
+/handoff/
+intake-comment.md
+not-saved-comment.md

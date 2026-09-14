@@ -1,0 +1,618 @@
+/* 5 TINTAS — the whole look of the site in one file.
+   White paper, three type roles, the brand colours, and the bee.
+   Everything Cami might want to change lives in the :root block right below. */
+
+/* ---- the three fonts, served from this folder so the site needs nothing from the internet -- */
+
+@font-face {
+  font-family: "Julius Sans One";
+  src: url("../fonts/julius-sans-one-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Bebas Neue";
+  src: url("../fonts/bebas-neue-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Kept ready so --font-title can be swapped to "Josefin Sans" without touching anything else. */
+@font-face {
+  font-family: "Josefin Sans";
+  src: url("../fonts/josefin-sans-300.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---- the dials --------------------------------------------------------------------------- */
+
+:root {
+  /* Brand colours, taken from the 5 Tintas logos. */
+  --orange: #ec691a;
+  --orange-hover: rgb(236 105 26 / 0.43);
+  --green: #bfd128;
+  --purple: #bdafd0;
+  --pink: #d5317a;
+  --yellow: #f8d919;
+  --grey: #999;
+
+  --ink: #171717;
+  --ink-soft: #6b6b6b;
+  --paper: #ffffff;
+  --rule: #e6e6e6;
+  --wash: #f6f6f6;
+
+  /* The stand-in for Arual. Change this one line to "Josefin Sans" to change the whole site. */
+  --font-title: "Julius Sans One", "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-subtitle: "Bebas Neue", "Julius Sans One", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --size-title: 22pt;
+  --size-subtitle: calc(var(--size-title) - 4pt);
+
+  --page: 1180px;
+  --gutter: 24px;
+  --accent: var(--orange);
+
+  /* The bee, and where in her the pointer actually points: the tip of her left antenna. */
+  --bee-cursor: url("../img/bee-cursor-32.png") 9 3;
+}
+
+/* ---- base -------------------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  cursor: var(--bee-cursor), auto;
+}
+
+img { max-width: 100%; display: block; }
+
+a { color: inherit; text-decoration: none; }
+
+a, button, summary, label, [role="button"] { cursor: var(--bee-cursor), pointer; }
+
+/* The marker the floating "back to the top" link watches for. It needs a little height to
+   be seen at all. */
+#top { display: block; height: 1px; }
+
+button { font: inherit; color: inherit; }
+
+:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+
+/* ---- the three type roles ---------------------------------------------------------------- */
+
+.title {
+  font-family: var(--font-title);
+  font-size: var(--size-title);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.25;
+}
+
+.subtitle {
+  font-family: var(--font-subtitle);
+  font-size: var(--size-subtitle);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+.prose p { margin: 0 0 1.1em; max-width: 62ch; }
+.prose--wide p { max-width: 78ch; }
+
+/* ---- language toggle --------------------------------------------------------------------- */
+
+html[data-language="en"] [data-l="es"] { display: none !important; }
+html[data-language="es"] [data-l="en"] { display: none !important; }
+
+.language {
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-family: var(--font-subtitle);
+  font-size: 13pt;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.language:hover { background: var(--orange-hover); }
+.language__slash { color: var(--grey); margin: 0 2px; }
+html[data-language="en"] .language__option[data-language-option="es"],
+html[data-language="es"] .language__option[data-language-option="en"] { color: var(--grey); }
+
+/* ---- header and navigation --------------------------------------------------------------- */
+
+.skip-link { position: absolute; left: -9999px; }
+.skip-link:focus { left: 8px; top: 8px; background: var(--paper); padding: 8px; z-index: 50; }
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+
+.masthead__bar {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 14px var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.masthead__brand { font-size: 26pt; letter-spacing: 0.16em; }
+.masthead__brand:hover { background: var(--orange-hover); }
+
+.masthead__menu {
+  display: none;
+  margin-left: auto;
+  background: none;
+  border: 0;
+  font-size: 22px;
+  line-height: 1;
+  padding: 6px 4px;
+}
+
+.nav { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+
+/* Sections of the site are in the title font; what sits under them is in the subtitle font. */
+.nav__link { font-size: 12pt; padding: 4px 6px; }
+.nav__link:hover, .nav__link:focus-visible { background: var(--orange-hover); }
+
+.nav__group { position: relative; display: flex; align-items: center; }
+
+.nav__caret {
+  background: none;
+  border: 0;
+  padding: 4px 2px;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--grey);
+}
+.nav__caret:hover { color: var(--ink); }
+
+.nav__drop {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 240px;
+  max-width: min(340px, 78vw);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 8px 0;
+  display: none;
+  z-index: 40;
+}
+.nav__group:hover .nav__drop,
+.nav__group:focus-within .nav__drop,
+.nav__group.is-open .nav__drop { display: block; }
+
+.nav__drop-link {
+  display: block;
+  padding: 6px 16px;
+  font-family: var(--font-subtitle);
+  font-size: 13pt;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.nav__drop-link:hover { background: var(--orange-hover); }
+
+/* The page you are on is marked in its own colour: green for collections, purple for runways. */
+.nav__group--collections .nav__drop-link.is-current { color: var(--green); }
+.nav__group--runways .nav__drop-link.is-current { color: var(--purple); }
+
+/* The runways sit at the right-hand end of the bar, so their list opens leftwards. */
+.nav__group--runways .nav__drop { left: auto; right: 0; }
+
+/* ---- sections ---------------------------------------------------------------------------- */
+
+.section {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 56px var(--gutter);
+  border-bottom: 1px solid var(--rule);
+}
+.section--page { border-bottom: 0; min-height: 60vh; }
+.section__title { margin: 0 0 8px; text-align: center; }
+.section__title--left { text-align: left; }
+.section--accent .section__title {
+  border-bottom: 3px solid var(--accent);
+  display: inline-block;
+  padding-bottom: 6px;
+}
+.section__lede { color: var(--ink-soft); text-align: center; margin: 0 0 28px; }
+.section--page .section__title--left + .prose { margin-top: 18px; }
+
+.section__list { list-style: none; margin: 24px 0 0; padding: 0; text-align: center; }
+.section__list li { margin: 6px 0; }
+.section__link { padding: 2px 8px; }
+.section__link:hover { background: var(--orange-hover); }
+
+.section__more { text-align: center; margin: 26px 0 0; }
+.section__more a:hover { background: var(--orange-hover); }
+
+.back-to-top { text-align: center; margin: 36px 0 0; }
+.back-to-top a { padding: 2px 8px; font-size: calc(var(--size-title) - 8pt); }
+.back-to-top a:hover { background: var(--orange-hover); }
+
+.floating-top {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 35;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-family: var(--font-title);
+  font-size: 11pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.floating-top:hover { background: var(--orange-hover); }
+.floating-top[hidden] { display: none; }
+
+/* ---- home hero --------------------------------------------------------------------------- */
+
+.hero { max-width: var(--page); margin: 0 auto; padding: 0 var(--gutter) 8px; }
+.hero__block { background: var(--paper); text-align: center; padding: 48px 0 28px; }
+.hero__title { font-size: 52pt; letter-spacing: 0.2em; margin: 0; }
+.hero__tagline { color: var(--ink-soft); margin: 10px 0 0; }
+.hero__photo { margin-top: 8px; }
+.hero__img { width: 100%; height: auto; object-fit: cover; }
+
+/* ---- home: two things side by side, so there is less to scroll past ---------------------- */
+
+.home-band {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 48px var(--gutter);
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px 48px;
+}
+.home-col__title { margin: 0 0 14px; }
+.home-col__list { list-style: none; margin: 0; padding: 0; }
+.home-col__list li { margin: 5px 0; }
+.home-col__teaser { margin: 0; color: var(--ink-soft); max-width: 46ch; }
+.home-col__more { margin: 16px 0 0; }
+.home-col__more a:hover { background: var(--orange-hover); }
+
+/* ---- carousel ---------------------------------------------------------------------------- */
+
+.carousel { position: relative; margin: 28px 0 0; }
+.carousel__track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding-bottom: 6px;
+}
+.carousel__track::-webkit-scrollbar { display: none; }
+.carousel__slide { flex: 0 0 auto; margin: 0; scroll-snap-align: center; width: min(70%, 520px); }
+.carousel__open { display: block; width: 100%; }
+.carousel__img { width: 100%; height: 420px; object-fit: cover; background: var(--wash); }
+
+/* The arrows only mean something once a script is running and there is somewhere to scroll to. */
+.carousel__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  display: none;
+  place-items: center;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  width: 42px;
+  height: 42px;
+  font-size: 24px;
+  line-height: 1;
+  padding: 0;
+}
+.carousel.is-scrollable .carousel__arrow { display: grid; }
+.carousel__arrow:hover { background: var(--orange-hover); }
+.carousel__arrow[disabled] { opacity: 0.25; }
+.carousel__arrow--prev { left: -6px; }
+.carousel__arrow--next { right: -6px; }
+
+/* ---- lightbox ---------------------------------------------------------------------------- */
+
+.lightbox {
+  border: 0;
+  padding: 0;
+  background: rgb(255 255 255 / 0.96);
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+}
+.lightbox[open] { display: grid; place-items: center; }
+.lightbox::backdrop { background: rgb(255 255 255 / 0.96); }
+.lightbox__img { max-width: 92vw; max-height: 88vh; margin: auto; object-fit: contain; }
+.lightbox__close,
+.lightbox__arrow {
+  position: fixed;
+  background: none;
+  border: 0;
+  color: var(--ink);
+  font-size: 30px;
+  line-height: 1;
+  padding: 10px 16px;
+}
+/* The brief asks for the close control at the upper LEFT. */
+.lightbox__close { top: 10px; left: 14px; }
+.lightbox__arrow--prev { left: 10px; top: 50%; }
+.lightbox__arrow--next { right: 10px; top: 50%; }
+.lightbox__close:hover, .lightbox__arrow:hover { color: var(--orange); }
+
+/* ---- grids ------------------------------------------------------------------------------- */
+
+.product-grid,
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px 22px;
+  margin-top: 26px;
+}
+
+.product-card__frame { position: relative; background: var(--wash); aspect-ratio: 3 / 4; overflow: hidden; }
+.product-card__img { width: 100%; height: 100%; object-fit: cover; }
+.product-card__blank { display: grid; place-items: center; height: 100%; color: var(--grey); font-size: 32px; }
+.product-card:hover .product-card__name { background: var(--orange-hover); }
+.product-card__name { margin: 10px 0 2px; display: inline-block; padding: 0 4px; }
+.product-card__price { margin: 0; color: var(--ink-soft); font-size: 14px; }
+.product-card__sold {
+  position: absolute;
+  inset: auto 0 0 0;
+  background: rgb(23 23 23 / 0.72);
+  color: #fff;
+  font-family: var(--font-subtitle);
+  letter-spacing: 0.08em;
+  text-align: center;
+  padding: 6px;
+}
+
+.tile__frame { background: var(--wash); aspect-ratio: 4 / 5; overflow: hidden; }
+.tile__img { width: 100%; height: 100%; object-fit: cover; }
+.tile__blank { display: grid; place-items: center; height: 100%; color: var(--grey); font-size: 32px; }
+.tile__name { margin: 10px 0 0; display: inline-block; padding: 0 4px; }
+.tile:hover .tile__name { background: var(--orange-hover); }
+.tile__soon { margin: 2px 0 0; color: var(--ink-soft); font-size: 13px; }
+
+.coming-soon { text-align: center; padding: 60px 0; color: var(--ink-soft); }
+.coming-soon__mark { font-size: 34px; margin: 0 0 8px; color: var(--yellow); }
+
+/* ---- product page ------------------------------------------------------------------------ */
+
+.product {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 48px var(--gutter);
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+}
+
+.product__stage { background: var(--wash); overflow: hidden; }
+.product__stage--empty { display: grid; place-items: center; aspect-ratio: 3 / 4; color: var(--grey); font-size: 40px; }
+.product__main { width: 100%; height: auto; transition: transform 0.18s ease-out; }
+.product__stage.is-zoomed .product__main { transform: scale(2); }
+
+.product__thumbs { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.product__thumb { display: block; border: 1px solid transparent; }
+.product__thumb[aria-current="true"] { border-color: var(--pink); }
+.product__thumb-img { width: 74px; height: 92px; object-fit: cover; }
+
+.product__name { margin: 0; }
+.product__price { color: var(--ink-soft); margin: 8px 0 24px; }
+
+.product__soldout {
+  background: #ededed;
+  color: var(--grey);
+  font-family: var(--font-subtitle);
+  font-size: var(--size-subtitle);
+  letter-spacing: 0.1em;
+  text-align: center;
+  padding: 14px;
+  margin-bottom: 24px;
+}
+
+.product__sizes-label { margin: 0 0 8px; font-family: var(--font-subtitle); letter-spacing: 0.08em; }
+.sizes { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 26px; }
+
+.size {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  padding: 0;
+}
+.size:hover { background: var(--orange-hover); }
+.size[aria-pressed="true"] { outline: 2px solid var(--pink); outline-offset: -1px; color: var(--pink); }
+
+/* A size she does not have is grey with a line drawn through it. */
+.size--gone {
+  color: var(--grey);
+  cursor: not-allowed;
+  background-image: linear-gradient(
+    to top right,
+    transparent calc(50% - 1px), var(--grey) calc(50% - 1px), var(--grey) calc(50% + 1px), transparent calc(50% + 1px)
+  );
+}
+.size--gone:hover { background-color: var(--paper); }
+
+/* ---- "interested in this piece?", and the bee who flies across it ------------------------- */
+
+.cta { position: relative; padding: 18px 0 6px; border-top: 1px solid var(--rule); }
+.cta__ask { margin: 0 0 4px; }
+.cta__links { display: flex; gap: 12px; flex-wrap: wrap; }
+.cta__link {
+  border: 1px solid var(--ink);
+  padding: 8px 18px;
+  font-family: var(--font-subtitle);
+  font-size: var(--size-subtitle);
+  letter-spacing: 0.08em;
+}
+.cta__link:hover { background: var(--orange-hover); }
+
+.cta__flight { position: relative; display: block; width: 260px; max-width: 100%; height: 54px; }
+.cta__path { position: absolute; inset: 0; width: 260px; height: 54px; overflow: visible; }
+.cta__path path { fill: none; stroke: var(--yellow); stroke-width: 2; stroke-dasharray: 2 7; stroke-linecap: round; }
+
+.cta__bee {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 26px;
+  height: 32px;
+  background: url("../img/bee.png") center / contain no-repeat;
+  opacity: 0;
+  offset-path: path("M 6 44 C 66 6, 128 62, 196 16");
+  offset-rotate: 0deg;
+  offset-distance: 0%;
+}
+/* Browsers without offset-path simply fade her in and out where she stands: no harm done. */
+@keyframes bee-flight {
+  0% { offset-distance: 0%; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+.cta:hover .cta__bee,
+.cta.is-flying .cta__bee { animation: bee-flight 2.4s ease-in-out; }
+
+/* ---- description, about, contact, video -------------------------------------------------- */
+
+.product__description-title { margin: 34px 0 10px; font-size: 18pt; }
+.product__collection { margin-top: 24px; }
+.product__collection a:hover { background: var(--orange-hover); }
+
+.about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 48px; align-items: start; }
+.about__img { width: 100%; height: auto; }
+.about__blank { background: var(--wash); aspect-ratio: 3 / 4; display: grid; place-items: center; color: var(--grey); }
+
+.contact__list { list-style: none; margin: 30px auto 0; padding: 0; max-width: 560px; }
+.contact__row { display: flex; gap: 16px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+.contact__label { min-width: 130px; }
+.contact__value a:hover { background: var(--orange-hover); }
+
+.video { margin-top: 28px; aspect-ratio: 16 / 9; max-width: 100%; }
+.video iframe { width: 100%; height: 100%; border: 0; }
+.video__player { width: 100%; height: 100%; display: block; background: #000; }
+
+.video-soon {
+  margin-top: 28px;
+  padding: 32px 20px;
+  border: 1px dashed var(--rule);
+  text-align: center;
+  color: var(--ink-soft);
+}
+.video-soon__bee { width: 42px; margin: 0 auto 10px; }
+.video-soon p { margin: 0; }
+
+.not-found__bee { width: 96px; margin: 26px auto 0; }
+
+/* ---- footer ------------------------------------------------------------------------------ */
+
+.footer {
+  border-top: 1px solid var(--rule);
+  padding: 40px var(--gutter);
+  text-align: center;
+  color: var(--ink-soft);
+}
+.footer__links { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; margin: 14px 0; }
+.footer__links a:hover { background: var(--orange-hover); color: var(--ink); }
+.footer__note { font-size: 13px; margin: 0; }
+
+/* ---- phones ------------------------------------------------------------------------------ */
+
+@media (max-width: 980px) {
+  .nav { gap: 10px; }
+  .nav__link { font-size: 11pt; padding: 4px; }
+  .masthead__brand { font-size: 21pt; }
+}
+
+@media (max-width: 720px) {
+  :root { --size-title: 18pt; }
+  .masthead__menu { display: block; }
+  .nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 12px var(--gutter) 20px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav.is-open { display: flex; }
+  .nav__link { font-size: 14pt; }
+  .nav__group { display: block; }
+  .nav__drop,
+  .nav__group--runways .nav__drop {
+    position: static; border: 0; padding: 0 0 0 14px; display: block;
+    min-width: 0; max-width: none; left: auto; right: auto;
+  }
+  .nav__caret { display: none; }
+  .hero__title { font-size: 34pt; }
+  .product-grid, .tile-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .product, .about { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .home-band { grid-template-columns: minmax(0, 1fr); gap: 30px; padding: 34px var(--gutter); }
+  .carousel__slide { width: 86%; }
+  .carousel__img { height: 300px; }
+  .contact__row { flex-direction: column; gap: 2px; }
+}
+
+/* A finger is not a pointer: no cursor picture, and no zoom that needs hovering. */
+@media (pointer: coarse) {
+  body, a, button, summary, label, [role="button"] { cursor: auto; }
+  .product__stage.is-zoomed .product__main { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .carousel__track { scroll-behavior: auto; }
+  .product__main { transition: none; }
+  .cta:hover .cta__bee, .cta.is-flying .cta__bee { animation: none; }
+}
+
+/* ---- print: plain paper ------------------------------------------------------------------ */
+
+@media print {
+  body { cursor: auto; color: #000; }
+  .masthead, .footer, .floating-top, .skip-link, .carousel__arrow, .lightbox, .cta__flight { display: none; }
+  .section, .product { padding: 0; border: 0; }
+  .carousel__track { display: block; overflow: visible; }
+  a { text-decoration: underline; }
+}

@@ -1,0 +1,87 @@
+name: Add a product
+description: Add a new piece to the shop. (Anade una pieza nueva a la tienda.)
+title: "Add product: "
+labels: [add-product]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fill this in and press **Create**. In a minute or two the piece is on the website.
+
+        You can change anything later, and you can delete or edit the photos afterwards too.
+
+        _Llena esto y pulsa **Create**. En uno o dos minutos la pieza esta en la pagina.
+        Todo se puede cambiar despues._
+
+  - type: input
+    id: name
+    attributes:
+      label: Name of the piece
+      description: This is what people see. (Esto es lo que ve la gente.)
+      placeholder: Vestido Eva
+    validations:
+      required: true
+
+  - type: input
+    id: sizes
+    attributes:
+      label: Sizes
+      description: >-
+        Separate them with commas. Leave it empty if sizes do not apply.
+        (Separadas por comas. Dejalo vacio si no aplica.)
+      placeholder: XS, S, M, L
+
+  - type: dropdown
+    id: sold-out
+    attributes:
+      label: Sold out
+      description: (Agotado)
+      options:
+        - "No"
+        - "Yes"
+      default: 0
+
+  - type: dropdown
+    id: collection
+    attributes:
+      label: Collection
+      description: >-
+        The collection this piece belongs to, if it belongs to one.
+        (La coleccion a la que pertenece, si pertenece a alguna.)
+      options:
+        - "(none)"
+        - "Hasta los Huesos (hasta-los-huesos)"
+        - "Desde el Alma (desde-el-alma)"
+        - "Eva Mitocondrial (eva-mitocondrial)"
+        - "Querido Diario (querido-diario)"
+        - "El calor de tu abrazo, el frio de tu ausencia (el-calor-de-tu-abrazo)"
+        - "Rayito de Sol (rayito-de-sol)"
+        - "Anoranza (anoranza)"
+      default: 0
+
+  - type: textarea
+    id: description-in-english
+    attributes:
+      label: Description in English
+      description: Leave a blank line between paragraphs. (Deja una linea en blanco entre parrafos.)
+      placeholder: Hand-dyed denim dress, made to order.
+
+  - type: textarea
+    id: descripcion-en-espanol
+    attributes:
+      label: Descripción en español
+      description: >-
+        If you leave this empty the English text is used in both languages.
+        (Si lo dejas vacio se usa el texto en ingles en los dos idiomas.)
+      placeholder: Vestido de denim tenido a mano, hecho por encargo.
+
+  - type: textarea
+    id: photos
+    attributes:
+      label: Photos
+      description: >-
+        Drag your photos into this box. The first one you add is the big photo people see first.
+        (Arrastra tus fotos a esta caja. La primera es la foto grande.)
+      placeholder: Drag your photos here. (Arrastra las fotos aqui.)
+    validations:
+      required: true

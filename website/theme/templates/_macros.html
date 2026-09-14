@@ -1,0 +1,85 @@
+{# Small reusable bits. Imported "with context" so url() works inside them. #}
+
+{% macro t(en, es) -%}
+<span data-l="en" lang="en">{{ en }}</span><span data-l="es" lang="es">{{ es if es else en }}</span>
+{%- endmacro %}
+
+{% macro tt(text) -%}
+{{ t(text.en, text.es) }}
+{%- endmacro %}
+
+{% macro prose(text, cls='prose') -%}
+<div class="{{ cls }}" data-l="en" lang="en">
+  {% for paragraph in text.paragraphs('en') %}<p>{{ paragraph }}</p>{% endfor %}
+</div>
+<div class="{{ cls }}" data-l="es" lang="es">
+  {% for paragraph in text.paragraphs('es') %}<p>{{ paragraph }}</p>{% endfor %}
+</div>
+{%- endmacro %}
+
+{% macro photo(item, size='small', cls='', loading='lazy') -%}
+<img class="{{ cls }}" src="{{ url(item.small_url if size == 'small' else item.large_url) }}"
+     alt="{{ item.alt_text }}" loading="{{ loading }}" decoding="async">
+{%- endmacro %}
+
+{% macro coming_soon(en='Coming soon', es='Muy pronto') -%}
+<div class="coming-soon">
+  <p class="coming-soon__mark">✳</p>
+  <p class="subtitle">{{ t(en, es) }}</p>
+</div>
+{%- endmacro %}
+
+{% macro back_to_top() -%}
+<p class="back-to-top"><a class="title" href="#top">{{ t('Back to the top', 'Volver al inicio') }}</a></p>
+{%- endmacro %}
+
+{% macro carousel(items, cls='carousel') -%}
+<div class="{{ cls }}" data-carousel>
+  <button class="carousel__arrow carousel__arrow--prev" type="button" data-carousel-prev
+          aria-label="Previous picture / Foto anterior">‹</button>
+  <div class="carousel__track" data-carousel-track>
+    {% for item in items %}
+    <figure class="carousel__slide">
+      <a class="carousel__open" href="{{ url(item.large_url) }}" data-lightbox>
+        {{ photo(item, 'large', 'carousel__img') }}
+      </a>
+    </figure>
+    {% endfor %}
+  </div>
+  <button class="carousel__arrow carousel__arrow--next" type="button" data-carousel-next
+          aria-label="Next picture / Foto siguiente">›</button>
+</div>
+{%- endmacro %}
+
+{% macro product_card(item) -%}
+<a class="product-card" href="{{ url(item.url) }}">
+  <div class="product-card__frame">
+    {% if item.cover %}
+      {{ photo(item.cover, 'small', 'product-card__img') }}
+    {% else %}
+      <span class="product-card__blank">✳</span>
+    {% endif %}
+    {% if item.sold_out %}<span class="product-card__sold">{{ t('Sold out', 'Agotado') }}</span>{% endif %}
+  </div>
+  <p class="product-card__name subtitle">{{ tt(item.name) }}</p>
+  <p class="product-card__price">{{ t('Price on request', 'Precio a consultar') }}</p>
+</a>
+{%- endmacro %}
+
+{# The big-picture view. It is only ever opened by the script; without one the links above
+   simply open the picture on its own. #}
+{% macro lightbox() -%}
+<dialog class="lightbox" data-lightbox-dialog aria-label="Photo / Foto">
+  <button class="lightbox__close" type="button" data-lightbox-close aria-label="Close / Cerrar">✕</button>
+  <button class="lightbox__arrow lightbox__arrow--prev" type="button" data-lightbox-prev
+          aria-label="Previous / Anterior">‹</button>
+  <img class="lightbox__img" data-lightbox-img alt="">
+  <button class="lightbox__arrow lightbox__arrow--next" type="button" data-lightbox-next
+          aria-label="Next / Siguiente">›</button>
+</dialog>
+{%- endmacro %}
+
+{% macro bee(cls='bee') -%}
+<img class="{{ cls }}" src="{{ url('static/img/bee.png') }}" alt="" aria-hidden="true"
+     width="200" height="246" loading="lazy" decoding="async">
+{%- endmacro %}

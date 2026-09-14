@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m with context %}
+{% block title %}About — {{ site.brand_name }}{% endblock %}
+{% block content %}
+<section class="section section--page about">
+  <div class="about__photo">
+    {% if content.about_photo %}
+      {{ m.photo(content.about_photo, 'large', 'about__img', 'eager') }}
+    {% else %}
+      <div class="about__blank"><span>✳</span></div>
+    {% endif %}
+  </div>
+  <div class="about__story">
+    <h1 class="section__title title section__title--left">{{ m.t('About us', 'Nosotras') }}</h1>
+    {{ m.prose(content.about) }}
+    <p class="section__more">
+      <a class="subtitle" href="{{ url('contact.html') }}">{{ m.t('Contact us', 'Contacto') }}</a>
+    </p>
+  </div>
+</section>
+{{ m.back_to_top() }}
+{% endblock %}

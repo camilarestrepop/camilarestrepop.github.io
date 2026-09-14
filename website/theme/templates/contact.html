@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m with context %}
+{% block title %}Contact — {{ site.brand_name }}{% endblock %}
+{% block content %}
+<section class="section section--page contact">
+  <h1 class="section__title title">{{ m.t('Contact us', 'Contacto') }}</h1>
+  <p class="section__lede">{{ m.t('Write to us about any piece, a commission, or a collaboration.',
+                                  'Escríbenos por cualquier pieza, un encargo o una colaboración.') }}</p>
+
+  <ul class="contact__list">
+    <li class="contact__row">
+      <span class="contact__label subtitle">Instagram</span>
+      <a class="contact__value" href="{{ site.instagram }}" rel="noopener" target="_blank">{{ site.instagram_handle }}</a>
+    </li>
+    <li class="contact__row">
+      <span class="contact__label subtitle">WhatsApp</span>
+      <span class="contact__value" data-l="en" lang="en">
+        <a href="{{ whatsapp_url('Hi! I found 5 Tintas online and I have a question.') }}"
+           rel="noopener" target="_blank">{{ site.whatsapp_display }}</a>
+      </span>
+      <span class="contact__value" data-l="es" lang="es">
+        <a href="{{ whatsapp_url('¡Hola! Encontré 5 Tintas en internet y tengo una pregunta.') }}"
+           rel="noopener" target="_blank">{{ site.whatsapp_display }}</a>
+      </span>
+    </li>
+    <li class="contact__row">
+      <span class="contact__label subtitle">{{ m.t('Email', 'Correo') }}</span>
+      <span class="contact__value" data-l="en" lang="en"><a href="{{ mailto_url('Hello 5 Tintas') }}">{{ site.email }}</a></span>
+      <span class="contact__value" data-l="es" lang="es"><a href="{{ mailto_url('Hola 5 Tintas') }}">{{ site.email }}</a></span>
+    </li>
+  </ul>
+</section>
+{% endblock %}

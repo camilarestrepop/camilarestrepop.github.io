@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m with context %}
+{% block title %}Runways — {{ site.brand_name }}{% endblock %}
+{% block content %}
+<section class="section section--page section--accent" style="--accent: #bdafd0;">
+  <h1 class="section__title title">{{ m.t('Runways', 'Pasarelas') }}</h1>
+  <div class="tile-grid">
+    {% for item in content.runways %}
+    <a class="tile" href="{{ url(item.url) }}">
+      <div class="tile__frame">
+        {% if item.cover %}{{ m.photo(item.cover, 'small', 'tile__img') }}
+        {% else %}<span class="tile__blank">✳</span>{% endif %}
+      </div>
+      <p class="tile__name subtitle">{{ m.tt(item.name) }}</p>
+      {% if item.coming_soon %}<p class="tile__soon">{{ m.t('Coming soon', 'Muy pronto') }}</p>{% endif %}
+    </a>
+    {% endfor %}
+  </div>
+  {{ m.back_to_top() }}
+</section>
+{% endblock %}

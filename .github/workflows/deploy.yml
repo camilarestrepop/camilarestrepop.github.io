@@ -1,0 +1,61 @@
+# Publishes the website.
+#
+# It runs by itself every time anything changes on the main branch, and it can also be started by
+# hand: Actions -> Publish the website -> Run workflow.
+#
+# For this to work once, in the repository: Settings -> Pages -> Build and deployment ->
+# Source: GitHub Actions.
+#
+# (Publica la pagina. Se ejecuta solo cada vez que algo cambia.)
+name: Publish the website
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One publish at a time, and never cancel one half way through.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Get the files
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install what the builder needs
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e . --no-deps
+
+      - name: Build the website
+        run: python -m cinco_tintas
+
+      - name: Get GitHub Pages ready
+        uses: actions/configure-pages@v5
+
+      - name: Hand the website over
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Put it online
+        id: deployment
+        uses: actions/deploy-pages@v4

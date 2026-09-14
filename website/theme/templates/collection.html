@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m with context %}
+{% block title %}{{ section.name.en }} — {{ site.brand_name }}{% endblock %}
+{% block content %}
+<section class="section section--page section--accent" style="--accent: {{ accent }};">
+  <h1 class="section__title title section__title--left">{{ m.tt(section.name) }}</h1>
+
+  {% if section.body %}{{ m.prose(section.body, 'prose prose--wide') }}{% endif %}
+
+  {% if section.photos %}
+    {{ m.carousel(section.photos) }}
+  {% else %}
+    {{ m.coming_soon() }}
+  {% endif %}
+
+  {% if section.video %}
+    {% if section.video.is_file %}
+    <div class="video">
+      <video class="video__player" controls playsinline preload="metadata">
+        <source src="{{ url(section.video.url) }}" type="{{ section.video.mime }}">
+        <a href="{{ url(section.video.url) }}">{{ m.t('Open the video', 'Abrir el video') }}</a>
+      </video>
+    </div>
+    {% else %}
+    <div class="video">
+      <iframe src="{{ section.video.url }}" title="{{ section.name.en }}" loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
+    </div>
+    {% endif %}
+  {% elif section.kind == 'runway' %}
+  {# A runway show is a film first and a set of photographs second, so its page says so. #}
+  <div class="video-soon">
+    {{ m.bee('video-soon__bee') }}
+    <p class="subtitle">{{ m.t('Video coming soon', 'Video muy pronto') }}</p>
+  </div>
+  {% endif %}
+
+  {% if linked_collection %}
+  <p class="section__more">
+    <a class="subtitle" href="{{ url(linked_collection.url) }}">{{ m.t('See the collection', 'Ver la colección') }}
+      — {{ m.tt(linked_collection.name) }}</a>
+  </p>
+  {% endif %}
+
+  <p class="section__more">
+    <a class="subtitle" href="{{ url('collections.html' if section.kind == 'collection' else 'runways.html') }}">
+      {{ m.t('All collections', 'Todas las colecciones') if section.kind == 'collection'
+         else m.t('All runways', 'Todas las pasarelas') }}</a>
+  </p>
+  {{ m.back_to_top() }}
+</section>
+{{ m.lightbox() }}
+{% endblock %}

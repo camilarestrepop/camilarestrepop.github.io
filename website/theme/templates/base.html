@@ -1,0 +1,89 @@
+{% import "_macros.html" as m with context %}
+<!doctype html>
+<html lang="en" data-language="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ site.brand_name }}{% endblock %}</title>
+<meta name="description" content="{{ site.tagline.en }}">
+<link rel="icon" href="{{ url('static/img/logo-mark.png') }}" type="image/png">
+<link rel="apple-touch-icon" href="{{ url('static/img/logo-mark.png') }}">
+<link rel="stylesheet" href="{{ url('static/css/site.css') }}">
+<script>
+/* Set the language before anything paints, so the page never flashes the wrong one. */
+(function () {
+  var chosen = 'en';
+  try { var saved = localStorage.getItem('5tintas.language'); if (saved === 'es' || saved === 'en') { chosen = saved; } }
+  catch (error) { chosen = 'en'; }
+  document.documentElement.setAttribute('data-language', chosen);
+  document.documentElement.setAttribute('lang', chosen);
+})();
+</script>
+</head>
+<body class="{{ body_class }}">
+<a class="skip-link" href="#main">Skip to content</a>
+<span id="top"></span>
+
+<header class="masthead">
+  <div class="masthead__bar">
+    <a class="masthead__brand title" href="{{ url('index.html') }}">{{ site.brand_name }}</a>
+    <button class="masthead__menu" type="button" data-menu-toggle aria-expanded="false"
+            aria-label="Menu / Menú">☰</button>
+    <nav class="nav" data-nav>
+      <a class="nav__link title" href="{{ url('shop.html') }}">{{ m.t('Shop all', 'Tienda') }}</a>
+
+      <div class="nav__group nav__group--collections" data-drop>
+        <a class="nav__link title" href="{{ url('collections.html') }}">{{ m.t('Collections', 'Colecciones') }}</a>
+        <button class="nav__caret" type="button" data-drop-toggle aria-expanded="false"
+                aria-label="Show the collections / Ver las colecciones">▾</button>
+        <div class="nav__drop">
+          {% for item in content.collections %}
+          <a class="nav__drop-link{{ ' is-current' if current_section == item.slug else '' }}"
+             href="{{ url(item.url) }}">{{ m.tt(item.name) }}</a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="nav__group nav__group--runways" data-drop>
+        <a class="nav__link title" href="{{ url('runways.html') }}">{{ m.t('Runways', 'Pasarelas') }}</a>
+        <button class="nav__caret" type="button" data-drop-toggle aria-expanded="false"
+                aria-label="Show the runways / Ver las pasarelas">▾</button>
+        <div class="nav__drop">
+          {% for item in content.runways %}
+          <a class="nav__drop-link{{ ' is-current' if current_section == item.slug else '' }}"
+             href="{{ url(item.url) }}">{{ m.tt(item.name) }}</a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <a class="nav__link title" href="{{ url('about.html') }}">{{ m.t('About us', 'Nosotras') }}</a>
+      <a class="nav__link title" href="{{ url('contact.html') }}">{{ m.t('Contact us', 'Contacto') }}</a>
+
+      <button class="language" type="button" data-language-toggle
+              aria-label="Change language / Cambiar idioma">
+        <span class="language__option" data-language-option="en">EN</span><span
+              class="language__slash">/</span><span class="language__option" data-language-option="es">ES</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+{% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <p class="footer__tagline subtitle">{{ m.tt(site.tagline) }}</p>
+  <p class="footer__links">
+    <a href="{{ site.instagram }}" rel="noopener" target="_blank">Instagram {{ site.instagram_handle }}</a>
+    <a href="{{ whatsapp_url('Hi! I found 5 Tintas online.') }}" rel="noopener" target="_blank">WhatsApp {{ site.whatsapp_display }}</a>
+    <a href="{{ mailto_url('Hello 5 Tintas') }}">{{ site.email }}</a>
+  </p>
+  <p class="footer__note">© {{ site.brand_name }}</p>
+</footer>
+
+<a class="floating-top" href="#top" data-floating-top hidden>{{ m.t('Top', 'Inicio') }}</a>
+<script src="{{ url('static/js/site.js') }}" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

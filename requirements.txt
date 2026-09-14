@@ -1,0 +1,6 @@
+# What the website builder needs. GitHub installs these itself every time it publishes.
+# (Lo que necesita el programa que construye la pagina. GitHub las instala solo.)
+Jinja2==3.1.6
+MarkupSafe==3.0.3
+pillow==12.3.0
+pillow-heif==1.7.0

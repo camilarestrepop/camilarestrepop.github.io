@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m with context %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero__block">
+    <h1 class="hero__title title">{{ site.brand_name }}</h1>
+    <p class="hero__tagline subtitle">{{ m.tt(site.tagline) }}</p>
+  </div>
+  {% if site.hero_photo %}
+  <div class="hero__photo">{{ m.photo(site.hero_photo, 'large', 'hero__img', 'eager') }}</div>
+  {% endif %}
+</section>
+
+<section class="section" id="carousel">
+  <h2 class="section__title title">{{ m.t('The work', 'El trabajo') }}</h2>
+  {% if site.carousel %}
+    {{ m.carousel(site.carousel) }}
+  {% else %}
+    {{ m.coming_soon() }}
+  {% endif %}
+</section>
+
+{# Collections and runways stand side by side: two short lists read faster than two long pages. #}
+<div class="home-band">
+  <section class="home-col" id="collections">
+    <h2 class="home-col__title title">{{ m.t('Collections', 'Colecciones') }}</h2>
+    <ul class="home-col__list">
+      {% for item in content.collections %}
+      <li><a class="section__link subtitle" href="{{ url(item.url) }}">{{ m.tt(item.name) }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="home-col" id="runways">
+    <h2 class="home-col__title title">{{ m.t('Runways', 'Pasarelas') }}</h2>
+    <ul class="home-col__list">
+      {% for item in content.runways %}
+      <li><a class="section__link subtitle" href="{{ url(item.url) }}">{{ m.tt(item.name) }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+
+<section class="section" id="shop">
+  <h2 class="section__title title">{{ m.t('Latest pieces', 'Últimas piezas') }}</h2>
+  {% if content.latest_products %}
+    <div class="product-grid">
+      {% for item in content.latest_products %}{{ m.product_card(item) }}{% endfor %}
+    </div>
+    <p class="section__more"><a class="subtitle" href="{{ url('shop.html') }}">{{ m.t('See everything', 'Ver todo') }}</a></p>
+  {% else %}
+    {{ m.coming_soon('Pieces coming soon', 'Piezas muy pronto') }}
+  {% endif %}
+</section>
+
+<div class="home-band">
+  <section class="home-col" id="about">
+    <h2 class="home-col__title title">{{ m.t('About us', 'Nosotras') }}</h2>
+    <p class="home-col__teaser">{{ m.t('Hand-dyed denim made slowly, in five inks and five senses.',
+                                       'Denim tenido a mano, hecho despacio, en cinco tintas y cinco sentidos.') }}</p>
+    <p class="home-col__more">
+      <a class="subtitle" href="{{ url('about.html') }}">{{ m.t('Read our story', 'Lee nuestra historia') }}</a>
+    </p>
+  </section>
+
+  <section class="home-col" id="contact">
+    <h2 class="home-col__title title">{{ m.t('Contact us', 'Contacto') }}</h2>
+    <ul class="home-col__list">
+      <li><a class="section__link subtitle" href="{{ site.instagram }}" rel="noopener" target="_blank">Instagram {{ site.instagram_handle }}</a></li>
+      <li><a class="section__link subtitle" href="{{ whatsapp_url('Hi! I found 5 Tintas online.') }}"
+             rel="noopener" target="_blank">WhatsApp {{ site.whatsapp_display }}</a></li>
+      <li><a class="section__link subtitle" href="{{ mailto_url('Hello 5 Tintas') }}">{{ m.t('Email us', 'Correo') }}</a></li>
+    </ul>
+    <p class="home-col__more">
+      <a class="subtitle" href="{{ url('contact.html') }}">{{ m.t('Say hello', 'Escríbenos') }}</a>
+    </p>
+  </section>
+</div>
+
+{{ m.back_to_top() }}
+{{ m.lightbox() }}
+{% endblock %}

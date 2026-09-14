@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m with context %}
+{% block title %}{{ site.brand_name }} — Shop{% endblock %}
+{% block content %}
+<section class="section section--page">
+  <h1 class="section__title title">{{ m.t('Shop all', 'Tienda') }}</h1>
+  <p class="section__lede">{{ m.t('Every piece is one of a kind. Price on request.',
+                                  'Cada pieza es única. Precio a consultar.') }}</p>
+  {% if content.products %}
+    <div class="product-grid">
+      {% for item in content.products %}{{ m.product_card(item) }}{% endfor %}
+    </div>
+  {% else %}
+    {{ m.coming_soon('The shop opens soon', 'La tienda abre muy pronto') }}
+    <p class="section__more">
+      <a class="subtitle" href="{{ url('contact.html') }}">{{ m.t('Ask about a piece', 'Pregunta por una pieza') }}</a>
+    </p>
+  {% endif %}
+  {{ m.back_to_top() }}
+</section>
+{% endblock %}

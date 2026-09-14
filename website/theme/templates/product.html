@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m with context %}
+{% block title %}{{ product.name.en }} — {{ site.brand_name }}{% endblock %}
+{% block content %}
+<article class="product">
+
+  <div class="product__media">
+    {% if product.cover %}
+    <div class="product__stage" data-zoom>
+      <img class="product__main" data-product-main src="{{ url(product.cover.large_url) }}"
+           alt="{{ product.cover.alt.en }}" decoding="async">
+    </div>
+      {% if product.photos|length > 1 %}
+      <div class="product__thumbs">
+        {% for item in product.photos %}
+        <a class="product__thumb" href="{{ url(item.large_url) }}" data-product-thumb
+           aria-current="{{ 'true' if loop.first else 'false' }}"
+           data-alt="{{ item.alt.en }}">
+          {{ m.photo(item, 'small', 'product__thumb-img') }}
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% else %}
+      <div class="product__stage product__stage--empty"><span>✳</span></div>
+    {% endif %}
+  </div>
+
+  <div class="product__detail">
+    <h1 class="product__name title">{{ m.tt(product.name) }}</h1>
+    <p class="product__price subtitle">{{ m.t('Price on request', 'Precio a consultar') }}</p>
+
+    {% if product.sold_out %}
+      <div class="product__soldout">{{ m.t('Sold out', 'Agotado') }}</div>
+    {% elif product.size_options %}
+      <div class="product__sizes">
+        <p class="product__sizes-label">{{ m.t('Sizes', 'Tallas') }}</p>
+        <div class="sizes">
+          {% for size in product.size_options %}
+          {% if size.available %}
+          <button class="size" type="button" data-size aria-pressed="false">{{ size.label }}</button>
+          {% else %}
+          <button class="size size--gone" type="button" data-size disabled
+                  aria-label="{{ size.label }} — not available / no disponible">{{ size.label }}</button>
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="cta" data-cta>
+      <p class="cta__ask subtitle">{{ m.t('Interested in this piece?', '¿Te interesa esta pieza?') }}</p>
+      {# The bee flies along this dotted line when the buttons below are touched. #}
+      <span class="cta__flight" aria-hidden="true">
+        <svg class="cta__path" viewBox="0 0 260 54" width="260" height="54" focusable="false">
+          <path d="M 6 44 C 66 6, 128 62, 196 16"></path>
+        </svg>
+        <span class="cta__bee"></span>
+      </span>
+      <div class="cta__links" data-l="en" lang="en">
+        <a class="cta__link" href="{{ site.instagram }}" rel="noopener" target="_blank">Instagram</a>
+        <a class="cta__link" rel="noopener" target="_blank"
+           href="{{ whatsapp_url('Hi! I am interested in ' ~ product.name.en ~ ' from 5 Tintas.') }}">WhatsApp</a>
+        <a class="cta__link" href="{{ mailto_url('Interested in ' ~ product.name.en) }}">Email</a>
+      </div>
+      <div class="cta__links" data-l="es" lang="es">
+        <a class="cta__link" href="{{ site.instagram }}" rel="noopener" target="_blank">Instagram</a>
+        <a class="cta__link" rel="noopener" target="_blank"
+           href="{{ whatsapp_url('¡Hola! Me interesa ' ~ product.name.es ~ ' de 5 Tintas.') }}">WhatsApp</a>
+        <a class="cta__link" href="{{ mailto_url('Me interesa ' ~ product.name.es) }}">Email</a>
+      </div>
+    </div>
+
+    {% if product.body %}
+    <div class="product__description">
+      <h2 class="product__description-title title">{{ m.t('Description', 'Descripción') }}</h2>
+      {{ m.prose(product.body) }}
+    </div>
+    {% endif %}
+
+    {% if product.collection %}
+      {% set linked = content.collection_by_slug(product.collection) %}
+      {% if linked %}
+      <p class="product__collection">
+        <a class="subtitle" href="{{ url(linked.url) }}">{{ m.t('From the collection', 'De la colección') }}
+          {{ m.tt(linked.name) }}</a>
+      </p>
+      {% endif %}
+    {% endif %}
+  </div>
+</article>
+{{ m.back_to_top() }}
+{% endblock %}
