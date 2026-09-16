@@ -2,7 +2,9 @@
 
 Tu página está aquí:
 
-### https://camilarestrepop.github.io
+### https://5tintas.com
+
+La dirección anterior, https://camilarestrepop.github.io, lleva al mismo sitio.
 
 Esta guía te dice cómo cambiarla. Todo se hace en github.com, desde el navegador. No necesitas
 instalar nada en tu computador, y no puedes romper nada: cada cambio se guarda como una versión
@@ -190,6 +192,28 @@ Están en un solo archivo, y toda la página lo lee.
 
 En ese mismo archivo están tu frase, la foto grande de la página principal, y cuántas piezas nuevas
 muestra la página principal.
+
+---
+
+## Tu dirección web
+
+La gente llega a tu página por **5tintas.com**. Esa dirección está escrita en el mismo archivo
+`site.md`, en esta línea:
+
+```
+domain: 5tintas.com
+```
+
+Deja esa línea como está. Añadir una pieza, cambiar una foto o editar tus textos nunca la toca. Solo
+importa si algún día cambia la dirección web, y entonces hay que cambiarla en dos sitios: esta línea
+y **Settings** → **Pages** en github.com. Pídele a Jack que haga las dos cosas a la vez.
+
+Tiene que quedarse ahí. Cada cambio que haces vuelve a publicar la página, y es esta línea la que le
+dice a cada publicación que conserve tu dirección. Si se borrara la línea no se rompería nada: la
+página volvería a responder en https://camilarestrepop.github.io.
+
+Para GitHub, `www.5tintas.com` y `5tintas.com` no son la misma dirección, así que la que esté en esa
+línea es la que hay que poner también en **Settings** → **Pages**.
 
 ---
 

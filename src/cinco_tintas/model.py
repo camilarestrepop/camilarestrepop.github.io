@@ -125,6 +125,8 @@ class SiteConfig:
     instagram: str
     whatsapp: str
     email: str
+    #: The custom domain the site answers at, as a bare hostname, or "" when it has none.
+    domain: str
     hero_photo: Photo | None
     carousel: list[Photo]
     latest_products_on_home: int

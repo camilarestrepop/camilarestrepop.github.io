@@ -374,6 +374,7 @@ SITE_KEYS = frozenset(
         "instagram",
         "whatsapp",
         "email",
+        "domain",
         "hero photo",
         "carousel folder",
         "latest products on home",
@@ -435,6 +436,7 @@ def load_site_config(content_dir: Path, *, report: Report) -> SiteConfig:
         instagram=checked_instagram(parsed.get("instagram"), path=path, report=report),
         whatsapp=checked_whatsapp(parsed.get("whatsapp"), path=path, report=report),
         email=checked_email(parsed.get("email"), path=path, report=report),
+        domain=checked_domain(parsed.get("domain"), path=path, report=report),
         hero_photo=hero_photo,
         carousel=carousel,
         latest_products_on_home=parse_whole_number(
@@ -455,6 +457,12 @@ _INSTAGRAM_HOSTS = frozenset({"instagram.com", "www.instagram.com", "m.instagram
 
 #: A tap-to-chat number has to carry its country code, so anything shorter than this is a mistake.
 WHATSAPP_LEAST_DIGITS = 10
+
+#: One piece of a domain name: letters, digits and dashes, never starting or ending with a dash.
+_DOMAIN_LABEL = r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?"
+
+#: A whole domain name: at least two pieces, the last one starting with a letter, like  5tintas.com
+_DOMAIN_NAME = re.compile(rf"^(?:{_DOMAIN_LABEL}\.)+[a-z][a-z0-9-]{{0,61}}[a-z0-9]$")
 
 
 def checked_instagram(value: str, *, path: Path, report: Report) -> str:
@@ -528,6 +536,49 @@ def checked_email(value: str, *, path: Path, report: Report) -> str:
         fix="Write the whole address, like   email: camilarestrepo.fashionlab@gmail.com",
     )
     return text
+
+
+def checked_domain(value: str, *, path: Path, report: Report) -> str:
+    """The custom domain, as the bare hostname GitHub Pages wants in a ``CNAME`` file.
+
+    The line is optional: no ``domain:`` line means no custom domain and no ``CNAME``, which is the
+    right answer for a site that never buys one. What is written is normalised the way the other
+    contact lines are — the scheme, a path, a port, a ``?...`` tail and a trailing dot are all noise
+    around the name, and a person copying the address out of a browser brings some of them with it.
+
+    A leading ``www.`` is **kept**. GitHub treats ``5tintas.com`` and ``www.5tintas.com`` as two
+    different custom domains, so quietly dropping it would publish the site at an address other than
+    the one set in the repository's settings. The host stays as it was written.
+
+    Anything that cannot be a hostname returns "" rather than itself: it is also a problem, so the
+    build stops before anything is written, and an empty answer can never become a wrong ``CNAME``.
+    """
+    text = value.strip()
+    if not text:
+        return ""
+    try:
+        parts = urlsplit(text if re.match(r"(?i)^https?://", text) else f"//{text}")
+        # An "@" in the address part is a sign-in prefix as far as any address reader is concerned,
+        # so "5tint@s.com" would otherwise quietly come back as the host "s.com". A domain has none.
+        host = "" if "@" in parts.netloc else (parts.hostname or "").rstrip(".")
+    except ValueError:
+        host = ""
+    if _DOMAIN_NAME.match(host):
+        if host != text:
+            report.notice(
+                where=path,
+                what=f'I read "domain: {text}" as {host}, which is the web address on its own. '
+                f"Write it that way on the line to be sure.",
+            )
+        return host
+    report.problem(
+        where=path,
+        what=f'"domain: {text}" is not a web address I can use, so I stopped rather than publish the site at '
+        "the wrong one.",
+        fix="Write the address on its own, like   domain: 5tintas.com   — or leave the line out and the site "
+        "keeps its github.io address.",
+    )
+    return ""
 
 
 def _named_photo(value: str, *, content_dir: Path, path: Path, report: Report, name: Text, label: str) -> Photo | None:

@@ -10,6 +10,11 @@ instagram: https://instagram.com/5.tintas
 whatsapp: +1 347 362 2979
 email: camilarestrepo.fashionlab@gmail.com
 
+# The web address people type to reach the site. Leave this line alone unless that address
+# itself changes. Take it out and the site goes back to its github.io address.
+# (Dejala como esta. Si la quitas, la pagina vuelve a su direccion github.io.)
+domain: 5tintas.com
+
 # The big photo at the top of the home page.
 hero photo: shared/hero.jpg
 

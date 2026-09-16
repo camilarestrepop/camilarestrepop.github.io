@@ -2,7 +2,9 @@
 
 Your website is live here:
 
-### https://camilarestrepop.github.io
+### https://5tintas.com
+
+The older address, https://camilarestrepop.github.io, brings people to the same place.
 
 This page tells you how to change it. You do everything on github.com, in the browser. You never
 need a program on your computer, and you cannot break anything: every change is saved as a new
@@ -187,6 +189,28 @@ They live in one file, and the whole site reads it.
 
 The same file holds your tagline, the big photo at the top of the home page, and how many of the
 newest pieces the home page shows.
+
+---
+
+## Your web address
+
+People reach your website at **5tintas.com**. That address is written in the same `site.md` file, on
+this line:
+
+```
+domain: 5tintas.com
+```
+
+Leave that line alone. Adding a piece, changing a photo or editing your words never touches it. It
+only matters if the web address itself ever changes, and then it has to change in two places: this
+line, and **Settings** → **Pages** on github.com. Ask Jack to do both together.
+
+It has to stay there. Every change you make publishes the website again, and it is this line that
+tells each publish to keep your address. If the line were deleted, nothing would break: the website
+would simply go back to answering at https://camilarestrepop.github.io instead.
+
+`www.5tintas.com` and `5tintas.com` are not the same address to GitHub, so whichever one is on that
+line is the one to put in **Settings** → **Pages** as well.
 
 ---
 

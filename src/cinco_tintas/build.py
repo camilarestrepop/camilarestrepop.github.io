@@ -19,6 +19,9 @@ RUNWAY_ACCENT = "#bdafd0"
 
 _PAGE_FOLDERS = ("collection", "runway", "product", "static")
 
+#: GitHub Pages reads this file at the root of what is published to learn the custom domain.
+DOMAIN_FILENAME = "CNAME"
+
 
 @dataclass(frozen=True, slots=True)
 class BuildResult:
@@ -62,6 +65,7 @@ def build_site(
         | {video.url for video in videos},
     )
     _copy_static(theme_dir=theme_dir, dist_dir=dist_dir)
+    _write_domain(dist_dir, domain=content.config.domain)
 
     environment = make_environment(templates_dir=theme_dir / "templates")
     pages = write_pages(plan_pages(content), environment=environment, content=content, dist_dir=dist_dir)
@@ -117,6 +121,9 @@ def _clear_generated(dist_dir: Path) -> None:
         item.unlink()
     for name in _PAGE_FOLDERS:
         shutil.rmtree(dist_dir / name, ignore_errors=True)
+    # The CNAME is generated from the "domain:" line like everything else here, so taking that line
+    # out has to take the file with it. Deleting it first is what makes that true.
+    (dist_dir / DOMAIN_FILENAME).unlink(missing_ok=True)
 
 
 def _prune_media(dist_dir: Path, *, keep: set[str]) -> None:
@@ -130,6 +137,20 @@ def _prune_media(dist_dir: Path, *, keep: set[str]) -> None:
             item.unlink()
         elif item.is_dir() and not any(item.iterdir()):
             item.rmdir()
+
+
+def _write_domain(dist_dir: Path, *, domain: str) -> None:
+    """Write the ``CNAME`` GitHub Pages reads, when ``site.md`` names a custom domain.
+
+    The site is published from a workflow artifact rather than a branch, and a deploy whose artifact
+    has no ``CNAME`` in it clears the custom domain set under Settings -> Pages. Cami redeploys every
+    time she adds a piece, so the file has to be written on every build or the address quietly goes
+    back to the github.io one. No ``domain:`` line means no file, which is the right answer for a
+    site that never buys a domain.
+    """
+    if not domain:
+        return
+    (dist_dir / DOMAIN_FILENAME).write_text(f"{domain}\n", encoding="utf-8")
 
 
 def _copy_static(*, theme_dir: Path, dist_dir: Path) -> None:
