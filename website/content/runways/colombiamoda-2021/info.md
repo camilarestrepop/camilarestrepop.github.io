@@ -12,7 +12,7 @@ name: Colombiamoda 2021
 name es: Colombiamoda 2021
 order: 1
 collection: hasta-los-huesos
-
+video: [https://www.youtube.com/watch?v=XXXXXXXXXXX](https://youtu.be/oQhsZ7iaK7U)
 --- ENGLISH ---
 Hasta los Huesos was shown at Colombiamoda 2021, on the Jóvenes Creadores Colegiatura runway,
 and in the fashion film made for the show. Photographs from the night are coming soon.
