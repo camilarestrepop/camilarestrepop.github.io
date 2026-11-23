@@ -15,8 +15,7 @@ collection: hasta-los-huesos
 
 --- ENGLISH ---
 Hasta los Huesos was shown at Colombiamoda 2021, on the Jóvenes Creadores Colegiatura runway,
-and in the fashion film made for the show. Photographs from the night are coming soon.
-
+and in the fashion film made for the show. 
 --- ESPAÑOL ---
 Hasta los Huesos se presentó en Colombiamoda 2021, en la pasarela Jóvenes Creadores Colegiatura,
-y en el fashion film realizado para el desfile. Las fotografías de esa noche llegan muy pronto.
+y en el fashion film realizado para el desfile. 
