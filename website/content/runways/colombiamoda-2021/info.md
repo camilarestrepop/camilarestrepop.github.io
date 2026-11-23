@@ -6,7 +6,7 @@
 # this folder, or paste the ordinary YouTube, Vimeo or Instagram address on the
 # line below (take the # off first).
 # (Sube un video.mp4 a esta carpeta, o pega aqui la direccion del video.)
-# video: [https://youtu.be/oQhsZ7iaK7U?si=JSK_3digZ2r0pixs]
+https://youtu.be/oQhsZ7iaK7U?si=JSK_3digZ2r0pixs
 
 name: Colombiamoda 2021
 name es: Colombiamoda 2021
