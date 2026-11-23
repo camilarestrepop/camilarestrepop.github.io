@@ -6,7 +6,7 @@
 # this folder, or paste the ordinary YouTube, Vimeo or Instagram address on the
 # line below (take the # off first).
 # (Sube un video.mp4 a esta carpeta, o pega aqui la direccion del video.)
-# video:https://youtu.be/-FH0kw5cctU?si=0n0gmZH8lRleWuyH
+video:https://youtu.be/-FH0kw5cctU?si=0n0gmZH8lRleWuyH
 
 name: Colombiamoda 2023
 name es: Colombiamoda 2023
