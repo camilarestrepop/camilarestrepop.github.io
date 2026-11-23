@@ -6,7 +6,7 @@
 # this folder, or paste the ordinary YouTube, Vimeo or Instagram address on the
 # line below (take the # off first).
 # (Sube un video.mp4 a esta carpeta, o pega aqui la direccion del video.)
-# video: https://www.youtube.com/watch?v=XXXXXXXXXXX
+# video: https://youtu.be/-FH0kw5cctU?si=0n0gmZH8lRleWuyH
 
 name: Colombiamoda 2023
 name es: Colombiamoda 2023
@@ -16,9 +16,9 @@ collection: el-calor-de-tu-abrazo
 --- ENGLISH ---
 El calor de tu abrazo, el frío de tu ausencia walked at Colombiamoda 2023, on the Jóvenes
 Creadores Colegiatura runway. Look 3 was later featured in the Antología editorial by Fashion
-Radicals. Photographs from the night are coming soon.
+Radicals. 
 
 --- ESPAÑOL ---
 El calor de tu abrazo, el frío de tu ausencia desfiló en Colombiamoda 2023, en la pasarela
 Jóvenes Creadores Colegiatura. El look 3 apareció después en el editorial Antología de Fashion
-Radicals. Las fotografías de esa noche llegan muy pronto.
+Radicals. 
